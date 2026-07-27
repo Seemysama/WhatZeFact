@@ -16,6 +16,10 @@ pip-delete-this-directory.txt
 .idea/
 .vscode/
 
+# Multimedia — on ne veut que le code sur GitHub
+Vidéos/
+Charte Graphique/
+
 # Project specific
 pipeline/.env
 pipeline/.temp/
@@ -27,3 +31,8 @@ pipeline/music/*
 # Large models
 pipeline/kokoro_models/*.onnx
 pipeline/kokoro_models/*.bin
+
+# Audio test files
+*.wav
+*.mp3
+
