@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatZeFact — Générateur de Vidéos</title>
+    <meta name="description" content="Génère automatiquement des vidéos courtes éducatives et drôles pour TikTok, Instagram Reels et YouTube Shorts.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-brand">
+            <img src="/static/logo.png" alt="WhatZeFact" class="header-logo" onerror="this.style.display='none'">
+            <div>
+                <div class="header-title">WhatZeFact</div>
+                <div class="header-subtitle">Générateur de vidéos IA</div>
+            </div>
+        </div>
+        <div class="header-status">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="status-text">Connexion...</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- Config Warning Banner -->
+        <div class="config-banner" id="config-banner">
+            <h3>⚙️ Configuration requise</h3>
+            <div id="config-errors"></div>
+            <p style="margin-top:8px;">Édite le fichier <code>pipeline/.env</code> avec tes clés API gratuites.</p>
+        </div>
+
+        <!-- Topic Input Section -->
+        <section class="card topic-section">
+            <div class="card-title"><span class="icon">💡</span> Sujet de la vidéo</div>
+            <div class="topic-input-wrapper">
+                <input
+                    type="text"
+                    id="topic-input"
+                    class="topic-input"
+                    placeholder="Ex: Pourquoi les chats ont peur des concombres ?"
+                    autocomplete="off"
+                >
+                <button class="generate-btn" id="generate-script-btn">
+                    <span class="spinner"></span>
+                    <span class="btn-text">✨ Générer le script</span>
+                </button>
+            </div>
+            <div class="quick-topics">
+                <button class="quick-topic">Pourquoi le ciel est bleu ?</button>
+                <button class="quick-topic">Les flamants roses naissent blancs</button>
+                <button class="quick-topic">Pourquoi on a le hoquet ?</button>
+                <button class="quick-topic">Le miel ne périme jamais</button>
+                <button class="quick-topic">Pourquoi l'eau de mer est salée ?</button>
+                <button class="quick-topic">Les pieuvres ont 3 cœurs</button>
+            </div>
+        </section>
+
+        <!-- Script Preview (left column) -->
+        <section class="card script-section" id="script-section">
+            <div class="card-title"><span class="icon">📝</span> Script généré</div>
+            <div id="script-content"></div>
+            <div class="script-actions">
+                <button class="btn btn-primary" id="generate-video-btn">
+                    🎬 Générer la vidéo
+                </button>
+                <button class="btn btn-secondary" id="regenerate-btn">
+                    🔄 Regénérer
+                </button>
+            </div>
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <!-- Settings -->
+            <div class="card">
+                <div class="card-title"><span class="icon">⚙️</span> Paramètres</div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">Voix</label>
+                    <select class="setting-select" id="voice-select">
+                        <option>Chargement...</option>
+                    </select>
+                </div>
+
+                <div class="toggle-row">
+                    <span class="toggle-label">📝 Sous-titres dynamiques</span>
+                    <input type="checkbox" class="toggle" id="subtitles-toggle" checked>
+                </div>
+
+                <div class="toggle-row">
+                    <span class="toggle-label">🏷️ Logo WhatZeFact</span>
+                    <input type="checkbox" class="toggle" id="logo-toggle" checked>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="card progress-card" id="progress-card">
+                <div class="card-title"><span class="icon">⏳</span> Progression</div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="progress-step" id="step-voice" data-default-icon="🎙️">
+                        <span class="step-icon">🎙️</span>
+                        <span>Voix off</span>
+                    </div>
+                    <div class="progress-step" id="step-search" data-default-icon="🔍">
+                        <span class="step-icon">🔍</span>
+                        <span>Vidéos d'illustration</span>
+                    </div>
+                    <div class="progress-step" id="step-assemble" data-default-icon="🎬">
+                        <span class="step-icon">🎬</span>
+                        <span>Montage</span>
+                    </div>
+                    <div class="progress-step" id="step-done" data-default-icon="✅">
+                        <span class="step-icon">✅</span>
+                        <span>Terminé</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <div class="card preview-card" id="preview-card">
+                <div class="card-title"><span class="icon">📱</span> Aperçu</div>
+                <video
+                    class="video-preview"
+                    id="video-preview"
+                    controls
+                    playsinline
+                ></video>
+                <div class="preview-actions">
+                    <button class="btn btn-primary" id="download-btn" style="flex:1;">
+                        ⬇️ Télécharger
+                    </button>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Gallery -->
+        <section class="card gallery-section">
+            <div class="card-title"><span class="icon">🎞️</span> Vidéos générées</div>
+            <div class="gallery-grid" id="gallery-grid">
+                <div class="empty-state" style="grid-column:1/-1;">
+                    <div class="icon">🎬</div>
+                    <p>Aucune vidéo générée pour l'instant.<br>Lance ta première génération !</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/static/app.js"></script>
+
+</body>
+</html>

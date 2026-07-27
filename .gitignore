@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE
+.idea/
+.vscode/
+
+# Project specific
+pipeline/.env
+pipeline/.temp/
+pipeline/output/*
+!pipeline/output/.gitkeep
+pipeline/music/*
+!pipeline/music/README.md
+
+# Large models
+pipeline/kokoro_models/*.onnx
+pipeline/kokoro_models/*.bin
